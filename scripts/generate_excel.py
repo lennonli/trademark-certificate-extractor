@@ -300,6 +300,23 @@ def main():
 
     if create_excel(data, output_path):
         print(f"Excel file created successfully: {output_path}")
+        
+        # Auto-cleanup intermediate files
+        try:
+            # Add current script directory to path to import cleanup
+            script_dir = Path(__file__).parent
+            if str(script_dir) not in sys.path:
+                sys.path.append(str(script_dir))
+            
+            from cleanup import cleanup
+            
+            working_dir = output_path.parent
+            print(f"Automatically cleaning up intermediate files in {working_dir}...")
+            cleanup(working_dir)
+            
+        except Exception as e:
+            print(f"Warning: Auto-cleanup failed: {e}", file=sys.stderr)
+
         open_excel(output_path)
     else:
         print("Failed to create Excel file", file=sys.stderr)
