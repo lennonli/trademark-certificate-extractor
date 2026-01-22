@@ -258,14 +258,6 @@ def main():
 
     if result:
         print(f"Successfully extracted logo to: {result}")
-        # Try to open the logo file for verification
-        try:
-            import subprocess
-            import platform
-            if platform.system() == 'Darwin':  # macOS
-                subprocess.run(['open', str(result)], check=True)
-        except:
-            pass
     else:
         print("Failed to extract logo", file=sys.stderr)
         sys.exit(1)

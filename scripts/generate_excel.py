@@ -292,8 +292,28 @@ def main():
             import json
             with open(sys.argv[1], 'r', encoding='utf-8') as f:
                 data = json.load(f)
-            output_path = Path(sys.argv[1]).parent / f"{Path(sys.argv[1]).stem}_output.xlsx"
-        except:
+            
+            # Determine output filename based on Registrant
+            registrant_name = "导出数据"
+            if data and isinstance(data, list):
+                for entry in data:
+                    name = entry.get('注册人')
+                    if name:
+                        registrant_name = name
+                        break
+            
+            # Sanitize filename
+            invalid_chars = '<>:"/\\|?*'
+            for char in invalid_chars:
+                registrant_name = registrant_name.replace(char, '')
+            registrant_name = registrant_name.strip()
+            
+            if not registrant_name:
+                registrant_name = "导出数据"
+
+            output_path = Path(sys.argv[1]).parent / f"{registrant_name}-商标注册信息.xlsx"
+        except Exception as e:
+            print(f"Error loading data: {e}", file=sys.stderr)
             # Example data for testing
             data = []
             output_path = Path(sys.argv[1])
